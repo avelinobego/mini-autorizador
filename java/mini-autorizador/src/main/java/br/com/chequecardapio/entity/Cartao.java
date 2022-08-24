@@ -1,21 +1,24 @@
 package br.com.chequecardapio.entity;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Document(collection = "cartoes")
 public class Cartao {
     private String numero;
-    private String senhaCartao;
+    private String nome;
+    private String senha;
     private BigDecimal valor;
 
     public Cartao() {
     }
 
-    public Cartao(@NonNull String numero, String senhaCartao, BigDecimal valor) {
+    public Cartao(@NonNull String numero, String senha, BigDecimal valor) {
         this.numero = numero;
-        this.senhaCartao = senhaCartao;
+        this.senha = senha;
         this.valor = valor;
     }
 
@@ -28,12 +31,12 @@ public class Cartao {
         this.numero = numero;
     }
 
-    public String getSenhaCartao() {
-        return senhaCartao;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setSenhaCartao(String senhaCartao) {
-        this.senhaCartao = senhaCartao;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public BigDecimal getValor() {
@@ -42,6 +45,14 @@ public class Cartao {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     @Override
