@@ -1,5 +1,6 @@
 package br.com.chequecardapio.entity;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.lang.NonNull;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
 
 @Document(collection = "cartoes")
 public class Cartao {
-    private String numero;
+    @Id private String numero;
     private String nome;
     private String senha;
     private BigDecimal valor;
