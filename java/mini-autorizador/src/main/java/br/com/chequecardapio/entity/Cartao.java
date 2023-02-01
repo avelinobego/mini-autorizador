@@ -1,23 +1,32 @@
 package br.com.chequecardapio.entity;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * Entidade que represernta um cartão
+ */
 @Document(collection = "cartoes")
 public class Cartao {
-    @Id private String numero;
+    @Id
+    @Indexed(unique = true)
+    @NonNull
+    private String numero;
+    @NonNull
     private String nome;
+    @NonNull
     private String senha;
+    @NonNull
     private BigDecimal valor;
 
-    public Cartao() {
-    }
-
-    public Cartao(@NonNull String numero, String senha, BigDecimal valor) {
+    public Cartao(@NonNull String nome, @NonNull String numero, @NonNull String senha, @NonNull BigDecimal valor) {
+        this.nome = nome;
         this.numero = numero;
         this.senha = senha;
         this.valor = valor;
@@ -27,8 +36,7 @@ public class Cartao {
         return numero;
     }
 
-    @NonNull
-    public void setNumero(String numero) {
+    public void setNumero(@NonNull String numero) {
         this.numero = numero;
     }
 
@@ -36,7 +44,7 @@ public class Cartao {
         return senha;
     }
 
-    public void setSenha(String senha) {
+    public void setSenha(@NonNull String senha) {
         this.senha = senha;
     }
 
@@ -44,7 +52,7 @@ public class Cartao {
         return valor;
     }
 
-    public void setValor(BigDecimal valor) {
+    public void setValor(@NonNull BigDecimal valor) {
         this.valor = valor;
     }
 
@@ -52,14 +60,16 @@ public class Cartao {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(@NonNull String nome) {
         this.nome = nome;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Cartao cartao = (Cartao) o;
         return numero.equals(cartao.numero);
     }
@@ -68,4 +78,10 @@ public class Cartao {
     public int hashCode() {
         return Objects.hash(numero);
     }
+
+    @Override
+    public String toString() {
+        return "Cartao [numero=" + numero + ", nome=" + nome + "]";
+    }
+
 }
