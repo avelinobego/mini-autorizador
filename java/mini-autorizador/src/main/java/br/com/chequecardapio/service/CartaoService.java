@@ -3,6 +3,8 @@ package br.com.chequecardapio.service;
 import br.com.chequecardapio.entity.Cartao;
 import br.com.chequecardapio.exceptions.CartaoJaExisteException;
 import br.com.chequecardapio.exceptions.CartaoNotFoundException;
+import br.com.chequecardapio.exceptions.SaldoInsuficienteException;
+import br.com.chequecardapio.exceptions.SenhaInvalidaexception;
 import br.com.chequecardapio.status.Status;
 
 import java.math.BigDecimal;
@@ -16,5 +18,5 @@ public interface CartaoService {
 
     BigDecimal saldo(String numero) throws CartaoNotFoundException;
 
-    Status transacao(Cartao cartao);
+    Status transacao(Cartao cartao) throws CartaoNotFoundException, SaldoInsuficienteException, SenhaInvalidaexception;
 }
