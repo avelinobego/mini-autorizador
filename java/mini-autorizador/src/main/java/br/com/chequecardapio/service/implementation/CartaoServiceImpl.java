@@ -4,6 +4,8 @@ import br.com.chequecardapio.chain.*;
 import br.com.chequecardapio.entity.Cartao;
 import br.com.chequecardapio.exceptions.CartaoJaExisteException;
 import br.com.chequecardapio.exceptions.CartaoNotFoundException;
+import br.com.chequecardapio.exceptions.SaldoInsuficienteException;
+import br.com.chequecardapio.exceptions.SenhaInvalidaexception;
 import br.com.chequecardapio.repository.CartoesRepository;
 import br.com.chequecardapio.service.CartaoService;
 import br.com.chequecardapio.status.Status;
@@ -47,9 +49,9 @@ public class CartaoServiceImpl implements CartaoService {
 
     @Override
     public Cartao add_cartao(Cartao cartao) throws CartaoJaExisteException {
-        try{
-        return repository.insert(cartao);
-        } catch(DuplicateKeyException ex){
+        try {
+            return repository.insert(cartao);
+        } catch (DuplicateKeyException ex) {
             throw new CartaoJaExisteException(cartao);
         }
     }
@@ -64,11 +66,10 @@ public class CartaoServiceImpl implements CartaoService {
         if (context.getStatus() == Status.CARTAO_INEXISTENTE) {
             throw new CartaoNotFoundException(String.format("Cartao com o número %s não encontrado", numero));
         }
-
         return context.getEncontrado().getValor();
     }
 
-    public Status transacao(Cartao cartao){
+    public Status transacao(Cartao cartao) throws CartaoNotFoundException, SaldoInsuficienteException, SenhaInvalidaexception {
 
         encontrarChain.setNext(senhaInvalidaChain);
         senhaInvalidaChain.setNext(semSaldoChain);
@@ -77,6 +78,17 @@ public class CartaoServiceImpl implements CartaoService {
         Context context = new Context();
         context.setCartao(cartao);
         encontrarChain.execute(context);
+
+        if (context.getStatus() == Status.CARTAO_INEXISTENTE) {
+            throw new CartaoNotFoundException(cartao);
+        }
+        if (context.getStatus() == Status.SALDO_INSUFICIENTE) {
+            throw new SaldoInsuficienteException(cartao);
+        }
+
+        if (context.getStatus() == Status.SENHA_INVALIDA) {
+            throw new SenhaInvalidaexception(cartao);
+        }
 
         return context.getStatus();
     }
